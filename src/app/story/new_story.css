@@ -1,0 +1,13 @@
+h1:empty:not(:focus)::before{
+    content: attr(data-h1-placeholder);
+    opacity: 30%;
+}
+p:empty:not(:focus)::before{
+    content: attr(data-p-placeholder);
+    opacity: 30%;
+}
+
+
+.medium-editor-placeholder:after{
+    content: '' !important;
+}

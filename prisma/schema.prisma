@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Story {
+  id    String @id @default(dbgenerated("concat('story_', replace(cast(gen_random_uuid() as text), '-', ''))")) @db.Text
+  authorId   String
+  content    String?
+  topics     String[]
+  publish    Boolean @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime  @updatedAt
+  Clap        Clap[]
+  Comments    Comment[]
+  Save    Save[]
+
+}
+
+model Comment {
+    id    String @id @default(dbgenerated("concat('comment_', replace(cast(gen_random_uuid() as text), '-', ''))")) @db.Text
+    content String
+    createdAt DateTime @default(now())
+    userId    String
+    storyId String
+    story   Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
+    parentCommentId String?
+    parentComment Comment? @relation("Comment to Comment" ,fields: [parentCommentId], references: [id], onDelete: Cascade)
+    replies Comment[] @relation("Comment to Comment")
+    Clap    Clap[]
+}
+
+model Clap {
+    id    String @id @default(dbgenerated("concat('clap_', replace(cast(gen_random_uuid() as text), '-', ''))")) @db.Text
+    userId  String
+    storyId String
+    story   Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
+    commentId String?
+    Comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+    clapCount   Int @default(0)
+}
+
+model Save {
+    id    String @id @default(dbgenerated("concat('save_', replace(cast(gen_random_uuid() as text), '-', ''))")) @db.Text
+    createdAt   DateTime @default(now())
+    userId      String
+    storyId String
+    story   Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
+}
+
+model Following {
+  id    String @id @default(dbgenerated("concat('following_', replace(cast(gen_random_uuid() as text), '-', ''))")) @db.Text
+  followerId String
+  followingId String
+}
+
+model Topics {
+    id    String @id @default(dbgenerated("concat('following_', replace(cast(gen_random_uuid() as text), '-', ''))")) @db.Text
+    userId   String @unique
+    selectedTopics  String[]
+}
