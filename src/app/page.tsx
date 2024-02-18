@@ -8,7 +8,7 @@ export default async function Home() {
   const allTopics = await getUniqueTopics()
   const UserTags = await GetSelectedTopics()
   return (
-    <main>
+    <main className="max-w-[1400px] mx-auto ">
       <Navbar/>
       <div className="max-w-[1100px] mx-auto px-5 mt-12">
         <StoryList allTopics={allTopics.response} UserTags={UserTags.Tags}/>
