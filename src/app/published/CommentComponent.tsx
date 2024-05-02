@@ -22,6 +22,7 @@ const CommentComponent = ({AuthorFirstName, AuthorImage,AuthorLastName, NumberCo
     const pathname = usePathname()
     const storyId = pathname.split( '/')?.[2] as string
     const [comments, setComments] = useState<Comments[]>([]);
+    const [refetchcomment, setRefetch] = useState<boolean>(false)
 
     const CommentStory = async () => {
         try {
@@ -52,7 +53,7 @@ const CommentComponent = ({AuthorFirstName, AuthorImage,AuthorLastName, NumberCo
         }
 
         fetchComments()
-    },[])
+    },[refetchcomment])
   return (
     <div>
         <button onClick={() => setShowSideComp(!showSideComp)} className='flex items-center opacity-60'>
@@ -86,7 +87,7 @@ const CommentComponent = ({AuthorFirstName, AuthorImage,AuthorLastName, NumberCo
                     </div>
                 </div>
             </div>
-            <RenderComments storyId={storyId}/>
+            <RenderComments setRefetch = {setRefetch} storyId={storyId}/>
         </div>
     </div>
     
@@ -100,7 +101,7 @@ interface Comments extends Comment {
     Clap:Clap[]
 }
 
-const RenderComments = ({storyId, parentCommentId}:{storyId:string, parentCommentId?:string}) => {
+const RenderComments = ({storyId, parentCommentId ,setRefetch}:{storyId:string, parentCommentId?:string, setRefetch?: React.Dispatch<React.SetStateAction<boolean>>}) => {
     const [comments, setComments] = useState<Comments[]>([]);
 
     useEffect(() => {
